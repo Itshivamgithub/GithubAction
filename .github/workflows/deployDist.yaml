@@ -1,40 +1,92 @@
+# name: cicd
+
+# on: [push, workflow_dispatch]
+
+# # on: 
+# #     - push
+# #     - workflow_dispatch
+
+
+# # manully code for cloning the repo and getting the code in the workflow file.
+# # jobs:
+# #     test:
+# #         runs-on: ubuntu-latest
+
+# #         steps:
+# #             - name: "Get code"
+# #               run: |
+# #                 echo "cloning the repo.."
+# #                 echo "${{tojson(github)}}"
+# #                 git clone https://github.com/${{github.repository}}.git
+
+
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v6
+
+#       - uses: actions/setup-node@v6
+#         with:
+#           node-version: 24
+#       - name: Install dependencies and run tests
+#         run: |
+#           npm ci
+#           npm run test
+
+
+
 name: cicd
 
 on: [push, workflow_dispatch]
 
-# on: 
-#     - push
-#     - workflow_dispatch
-
-
-# manully code for cloning the repo and getting the code in the workflow file.
-# jobs:
-#     test:
-#         runs-on: ubuntu-latest
-
-#         steps:
-#             - name: "Get code"
-#               run: |
-#                 echo "cloning the repo.."
-#                 echo "${{tojson(github)}}"
-#                 git clone https://github.com/${{github.repository}}.git
-
-
 jobs:
   test:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 24
-      - name: Install dependencies and run tests
-        run: |
-          npm ci
-          npm run test
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests
+        run: npm run test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Deploy
+        run: echo "Deploying application..."
 
 
 
-
+        
+          # Add your deployment commands here
+          # Examples:
+          # - scp -r dist/* user@server:/path/to/deploy
+          # - rsync -avz dist/ user@server:/var/www/html
+          # - npm run deploy
               
