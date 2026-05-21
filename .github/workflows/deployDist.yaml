@@ -7,18 +7,32 @@ on: [push, workflow_dispatch]
 #     - workflow_dispatch
 
 
+# manully code for cloning the repo and getting the code in the workflow file.
+# jobs:
+#     test:
+#         runs-on: ubuntu-latest
+
+#         steps:
+#             - name: "Get code"
+#               run: |
+#                 echo "cloning the repo.."
+#                 echo "${{tojson(github)}}"
+#                 git clone https://github.com/${{github.repository}}.git
+
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
 
-        steps:
-            - name: "Get code"
-              run: |
-                echo "cloning the repo.."
-                echo "${{tojson(github)}}"
-                git clone https://github.com/${{github.repository}}.git
-
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Install dependencies and run tests
+        run: |
+          npm ci
+          npm run test
 
 
 
