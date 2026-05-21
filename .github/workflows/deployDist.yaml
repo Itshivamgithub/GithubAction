@@ -1,0 +1,26 @@
+name: cicd
+
+on: [push, workflow_dispatch]
+
+# on: 
+#     - push
+#     - workflow_dispatch
+
+
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: "Get code"
+              run: |
+                echo "cloning the repo.."
+                echo "${{tojson(github)}}"
+                git clone https://github.com/${{github.repository}}.git
+
+
+
+
+
+              
